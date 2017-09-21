@@ -1,0 +1,47 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+  <display-name>Archetype Created Web Application</display-name>
+  <servlet>
+  	<servlet-name>BibliothequeServlet</servlet-name>
+  	<display-name>BibliothequeServlet</display-name>
+  	<description></description>
+  	<servlet-class>fr.servlet.BibliothequeServlet</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>ListLivreServlet</servlet-name>
+  	<display-name>ListLivreServlet</display-name>
+  	<description></description>
+  	<servlet-class>fr.servlet.ListLivreServlet</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>ListAutServlet</servlet-name>
+  	<display-name>ListAutServlet</display-name>
+  	<description></description>
+  	<servlet-class>fr.servlet.ListAutServlet</servlet-class>
+  </servlet>
+  <servlet>
+  	<servlet-name>AuteurServlet</servlet-name>
+  	<display-name>AuteurServlet</display-name>
+  	<description></description>
+  	<servlet-class>fr.servlet.AuteurServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>BibliothequeServlet</servlet-name>
+  	<url-pattern>/BibliothequeServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>ListLivreServlet</servlet-name>
+  	<url-pattern>/ListLivreServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>ListAutServlet</servlet-name>
+  	<url-pattern>/ListAutServlet</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>AuteurServlet</servlet-name>
+  	<url-pattern>/AuteurServlet</url-pattern>
+  </servlet-mapping>
+</web-app>
