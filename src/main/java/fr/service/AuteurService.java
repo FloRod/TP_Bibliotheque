@@ -34,10 +34,18 @@ public class AuteurService implements AuteurServiceInterface {
 		em.getTransaction().begin();
 		int id = Integer.parseInt(mapUpdate.get("id"));
 		Auteur nouvelAuteur = em.find(Auteur.class, id);
-		nouvelAuteur.setNom(mapUpdate.get("nom"));
-		nouvelAuteur.setPrenom(mapUpdate.get("prenom"));
-		nouvelAuteur.setLangue(mapUpdate.get("langue"));
-		nouvelAuteur.setLivres(null);
+		if (mapUpdate.get("nom") != null){
+			nouvelAuteur.setNom(mapUpdate.get("nom"));
+		}
+		if (mapUpdate.get("prenom") != null){
+			nouvelAuteur.setPrenom(mapUpdate.get("prenom"));
+		}
+		if (mapUpdate.get("langue") != null){
+			nouvelAuteur.setLangue(mapUpdate.get("langue"));
+		}
+		if (mapUpdate.get("livres") != null){		
+			nouvelAuteur.setLivres(null);			//à compléter
+		}
 		em.getTransaction().commit();
 	}
 

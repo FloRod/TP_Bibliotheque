@@ -89,8 +89,8 @@ public class AuteurServlet extends HttpServlet {
 			boulException = true;
 		}
 		if(!boulException){
-			response.setStatus(HttpServletResponse.SC_OK);
-			response.getWriter().write("{\"Code 200\":\"suucès de la requète\"}");
+			response.setStatus(HttpServletResponse.SC_CREATED);
+			response.getWriter().write("{\"Code 201\":\"succès - création de l'objet\"}");
 		}
 	}
 
@@ -120,7 +120,7 @@ public class AuteurServlet extends HttpServlet {
 		}
 		if (!boulException){
 			response.setStatus(HttpServletResponse.SC_OK);
-			response.getWriter().write("{\"Code 200\":\"suucès de la requète\"}");
+			response.getWriter().write("{\"Code 200\":\"succès de la requète\"}");
 		}
 	}
 }

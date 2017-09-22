@@ -11,26 +11,29 @@ import fr.config.ConnectionEm;
 import fr.models.Livre;
 
 public class LivreService implements LivreServiceInterface {
-	
 
 	public static EntityManager em = ConnectionEm.getInstance();
-
 
 	public void add(Map<String, String> mapAdd) {
 		em.getTransaction().begin();
 		Livre nouveauLivre = new Livre();
 		nouveauLivre.setTitre(mapAdd.get("titre"));
 		nouveauLivre.setDescription(mapAdd.get("description"));
-		nouveauLivre.setDatePublication(Date.valueOf(mapAdd.get("datePublication")));
+		// nouveauLivre.setDatePublication(Date.valueOf(mapAdd.get("datePublication")));
+		// problème avec la date à corriger
 		nouveauLivre.setCategorie(mapAdd.get("categorie"));
-		nouveauLivre.setNbrExemplaires(Integer.parseInt(mapAdd.get("nbrExemplaires")));
-		nouveauLivre.setNbrExempDispo(Integer.parseInt(mapAdd.get("nbrExempDispo")));
+		if (mapAdd.get("nbrExemplaires") != null) {
+			nouveauLivre.setNbrExemplaires(Integer.parseInt(mapAdd.get("nbrExemplaires")));
+		}
+		if (mapAdd.get("nbrExempDispo") != null) {
+			nouveauLivre.setNbrExempDispo(Integer.parseInt(mapAdd.get("nbrExempDispo")));
+		}
 		nouveauLivre.setAuteur(null);
 		em.persist(nouveauLivre);
 		em.getTransaction().commit();
 	}
-	
-	public Livre find(int id){
+
+	public Livre find(int id) {
 		return em.find(Livre.class, id);
 	}
 
@@ -38,13 +41,27 @@ public class LivreService implements LivreServiceInterface {
 		em.getTransaction().begin();
 		int id = Integer.parseInt(mapUpdate.get("id"));
 		Livre nouveauLivre = em.find(Livre.class, id);
-		nouveauLivre.setTitre(mapUpdate.get("titre"));
-		nouveauLivre.setDescription(mapUpdate.get("description"));
-		nouveauLivre.setDatePublication(Date.valueOf(mapUpdate.get("datePublication")));
-		nouveauLivre.setCategorie(mapUpdate.get("categorie"));
-		nouveauLivre.setNbrExemplaires(Integer.parseInt(mapUpdate.get("nbrExemplaires")));
-		nouveauLivre.setNbrExempDispo(Integer.parseInt(mapUpdate.get("nbrExempDispo")));
-		nouveauLivre.setAuteur(null);
+		if (mapUpdate.get("titre") != null) {
+			nouveauLivre.setTitre(mapUpdate.get("titre"));
+		}
+		if (mapUpdate.get("description") != null) {
+			nouveauLivre.setDescription(mapUpdate.get("description"));
+		}
+		if (mapUpdate.get("datePublication") != null) {
+			nouveauLivre.setDatePublication(Date.valueOf(mapUpdate.get("datePublication")));
+		}
+		if (mapUpdate.get("categorie") != null) {
+			nouveauLivre.setCategorie(mapUpdate.get("categorie"));
+		}
+		if (mapUpdate.get("nbrExemplaires") != null) {
+			nouveauLivre.setNbrExemplaires(Integer.parseInt(mapUpdate.get("nbrExemplaires")));
+		}
+		if (mapUpdate.get("nbrExempDispo") != null) {
+			nouveauLivre.setNbrExempDispo(Integer.parseInt(mapUpdate.get("nbrExempDispo")));
+		}
+		if (mapUpdate.get("auteur") != null) {
+			nouveauLivre.setAuteur(null);			// à compléter
+		}
 		em.getTransaction().commit();
 	}
 
