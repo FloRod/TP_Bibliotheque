@@ -35,8 +35,15 @@ public class Livre {
 	@Column(length = 50)
 	private String categorie;
 	
+	@Expose
 	@ManyToOne
 	private Auteur auteur;
+	
+	@Expose
+	private Integer nbrExemplaires;
+	
+	@Expose
+	private Integer nbrExempDispo;
 	
 	/**
 	 * 
@@ -63,10 +70,6 @@ public class Livre {
 		this.nbrExemplaires = nbrExemplaires;
 		this.nbrExempDispo = nbrExempDispo;
 	}
-
-	private Integer nbrExemplaires;
-	
-	private Integer nbrExempDispo;
 
 	/**
 	 * @return the titre

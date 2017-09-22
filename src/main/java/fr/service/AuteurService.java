@@ -1,9 +1,9 @@
 package fr.service;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import fr.config.ConnectionEm;
@@ -15,9 +15,14 @@ public class AuteurService implements AuteurServiceInterface {
 	public static EntityManager em = ConnectionEm.getInstance();
 
 
-	public void save(Auteur nouvelauteur) {
+	public void add(Map<String, String> mapAdd) {
 		em.getTransaction().begin();
-		em.persist(nouvelauteur);
+		Auteur nouvelAuteur = new Auteur();
+		nouvelAuteur.setNom(mapAdd.get("nom"));
+		nouvelAuteur.setPrenom(mapAdd.get("prenom"));
+		nouvelAuteur.setLangue(mapAdd.get("langue"));
+		nouvelAuteur.setLivres(null);
+		em.persist(nouvelAuteur);
 		em.getTransaction().commit();
 	}
 	
@@ -25,13 +30,14 @@ public class AuteurService implements AuteurServiceInterface {
 		return em.find(Auteur.class, id);
 	}
 
-	public void update(Auteur auteur) {
+	public void update(Map<String, String> mapUpdate) {
 		em.getTransaction().begin();
-		Auteur nouvelAuteur = em.find(Auteur.class, auteur.getId());
-		nouvelAuteur.setNom(auteur.getNom());
-		nouvelAuteur.setPrenom(auteur.getPrenom());
-		nouvelAuteur.setLivres(auteur.getLivres());
-		nouvelAuteur.setLangue(auteur.getLangue());
+		int id = Integer.parseInt(mapUpdate.get("id"));
+		Auteur nouvelAuteur = em.find(Auteur.class, id);
+		nouvelAuteur.setNom(mapUpdate.get("nom"));
+		nouvelAuteur.setPrenom(mapUpdate.get("prenom"));
+		nouvelAuteur.setLangue(mapUpdate.get("langue"));
+		nouvelAuteur.setLivres(null);
 		em.getTransaction().commit();
 	}
 

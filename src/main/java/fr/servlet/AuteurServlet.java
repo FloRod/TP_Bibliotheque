@@ -3,8 +3,9 @@ package fr.servlet;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Field;
-import java.util.List;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -43,21 +44,23 @@ public class AuteurServlet extends HttpServlet {
 		response.setContentType("application/json;charset=UTF-8");
 		AuteurServiceInterface auteurService = new AuteurService();
 		System.out.println(request.getPathInfo());
-
-		if (request.getPathInfo() == null) {
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-		} else {
+		String json = new String();
+		try {
 			int id = Integer.parseInt(request.getPathInfo().substring(1));
-			Auteur auteur = auteurService.find(id);
-			String json = JsonConvertor.convert(auteur);
-			System.out.println(json);
-			if (json != null) {
+			Auteur auteur = new Auteur();
+
+			auteur = auteurService.find(id);
+			if (auteur == null) {
+				response.setStatus(HttpServletResponse.SC_BAD_GATEWAY);
+				response.getWriter().write("{\"error\":\"ressource non trouvée\"}");
+			} else {
+				json = JsonConvertor.convert(auteur);
 				response.setStatus(HttpServletResponse.SC_OK);
 				response.getWriter().write(json);
-			} else {
-				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				response.getWriter().write(json);
 			}
+		} catch (NumberFormatException e) {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.getWriter().write("{\"error\":\"saisie invalide\"}");
 		}
 	}
 
@@ -68,42 +71,56 @@ public class AuteurServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		AuteurServiceInterface auteurService = new AuteurService();
-		Auteur nouvelAuteur = new Auteur();
-		nouvelAuteur.setNom(request.getParameter("nom"));
-		nouvelAuteur.setPrenom(request.getParameter("prenom"));
-		nouvelAuteur.setLangue(request.getParameter("langue"));
-		System.out.println(nouvelAuteur.getNom() + " " + nouvelAuteur.getPrenom() + ", " + nouvelAuteur.getLangue());
-		auteurService.save(nouvelAuteur);
-	}
-	
-	protected void doPut(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
 		response.setContentType("application/json;charset=UTF-8");
 		AuteurServiceInterface auteurService = new AuteurService();
-		System.out.println(request.getPathInfo());
+		boolean boulException = false;
 
-		if (request.getPathInfo() == null) {
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-		} else {
-			int id = Integer.parseInt(request.getPathInfo().substring(1));
-			Auteur auteur = auteurService.find(id);
-			BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
-			String data = br.readLine();
-			System.out.println(data);
-			
-			List<Auteur>
-			DataRecovery.recover(data, auteur);
-//			String[] tabSplit = data.split("=|&");
-//			for (int i=0; i<tabSplit.length; i++){
-//				System.out.println(tabSplit[i]);
-//			}
-//			Field[] tabField = auteur.getClass().getDeclaredFields();
-			for (int i=0; i<tabField.length; i++){
-				System.out.println(tabField[i].getName());
+		try {
+			Enumeration<String> enumeration = request.getParameterNames();
+			Map<String, String> mapAdd = new HashMap<String, String>();
+			while (enumeration.hasMoreElements()) {
+				String parametre = enumeration.nextElement();
+				mapAdd.put(parametre, request.getParameter(parametre));
 			}
-	//	Auteur auteurToUpdate = find
+			auteurService.add(mapAdd);
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_BAD_GATEWAY);
+			response.getWriter().write("{\"error\":\"saisie invalide\"}");
+			boulException = true;
+		}
+		if(!boulException){
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.getWriter().write("{\"Code 200\":\"suucès de la requète\"}");
 		}
 	}
 
+	/**
+	 * @see HttpServlet#doPut(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	// Attention, problème de cash => impossible de modifier une valeur après une exception
+	protected void doPut(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+
+		response.setContentType("application/json;charset=UTF-8");
+		AuteurServiceInterface auteurService = new AuteurService();
+		boolean boulException = false;
+
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(request.getInputStream()));
+			String data = br.readLine();
+
+			Map<String, String> mapSplit = DataRecovery.recover(data);
+			mapSplit.put("id", request.getPathInfo().substring(1));
+			auteurService.update(mapSplit);
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_BAD_GATEWAY);
+			response.getWriter().write("{\"error\":\"saisie invalide\"}");
+			boulException = true;
+		}
+		if (!boulException){
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.getWriter().write("{\"Code 200\":\"suucès de la requète\"}");
+		}
+	}
 }
